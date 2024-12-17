@@ -31,7 +31,7 @@ Our experiments utilize the **reRLDD** and **reDROZY** datasets.
 2. **Feature Extraction**:
 
    - The Eye Aspect Ratio (EAR) is input into the wavelet packet for feature extraction.
-   - The extracted features are stored in the `/wavelet_feature` directory.
+   - The extracted features are stored in the `./wavelet_feature` directory.
 
 3. **Confident Sample Selection**:
 
@@ -41,7 +41,7 @@ Our experiments utilize the **reRLDD** and **reDROZY** datasets.
        ```python
        python ./small_loss/small_loss_confident_ind.py --dataset reRLDD
        ```
-   - Both confident samples and remaining samples are stored in the `/confident_analysis` directory.
+   - Both confident samples and remaining samples are stored in the `./confident_analysis` directory.
 
 4. **Fine-Grained Feature Extraction**:
 
@@ -51,7 +51,7 @@ Our experiments utilize the **reRLDD** and **reDROZY** datasets.
        ```python
        python ./gmm_extract_Fine_feature.py --dataset reRLDD
        ```
-   - This process generates quantified fatigue sequence features, which are stored in the `/fine_grained_feature` directory.
+   - This process generates quantified fatigue sequence features, which are stored in the `./fine_grained_feature` directory.
 ## Training & Testing
 To train and test the model, use the following commands:
 1. **Without Meta-Learning**:
