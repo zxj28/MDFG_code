@@ -42,7 +42,7 @@ Our experiments utilize the **reRLDD** and **reDROZY** datasets.
        python ./small_loss/small_loss_confident_ind.py --dataset reRLDD
        ```
    - Both confident samples and remaining samples are stored in the `./confident_analysis` directory.
-
+     
 4. **Fine-Grained Feature Extraction**:
 
    - Input the confident samples, training set, and testing set into `gmm_extract_Fine_feature.py` to perform fine-grained classification.
@@ -52,6 +52,7 @@ Our experiments utilize the **reRLDD** and **reDROZY** datasets.
        python ./gmm_extract_Fine_feature.py --dataset reRLDD
        ```
    - This process generates quantified fatigue sequence features, which are stored in the `./fine_grained_feature` directory.
+     
 ## Training & Testing
 To train and test the model, use the following commands:
 1. **Without Meta-Learning**:
