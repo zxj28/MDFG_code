@@ -29,25 +29,28 @@ Our experiments utilize the **reRLDD** and **reDROZY** datasets.
 
 2. **Feature Extraction**:
 
-   - The Eye Aspect Ratio (EAR) is input into the wavelet packet for feature extraction
+   - The Eye Aspect Ratio (EAR) is input into the wavelet packet for feature extraction.
    - The extracted features are stored in the `/wavelet_feature` directory.
 
 3. **Confident Sample Selection**:
 
    - Confident samples are identified using the `small_loss` method.
-     - Update the paths: `path="your_wavelet_faeture_path"` and `save_path="you_confint_data_save_path"`.
+     - Update the paths: `path="your_wavelet_feature_path"` and `save_path="your_confident_data_save_path"`.
      - Run the following command to extract confident samples:
-     - Both confident samples and remaining samples are stored in the `/confident_analysis` directory.
-     ```python
-     python ./small_loss/small_loss_cofident_ind.py --dataset reRLDD
-4.**Fine-Grained Feature Extraction**:
+       ```python
+       python ./small_loss/small_loss_confident_ind.py --dataset reRLDD
+       ```
+   - Both confident samples and remaining samples are stored in the `/confident_analysis` directory.
 
-  - Input the confident samples, training set, and testing set into `gmm_extract_Fine_feature.py` to perform fine-grained classification.
-    - Update the paths: `path="your_confint_data_save_path"` and `save_path="your_fine_data_save_path"`.
-    - Run the following command to generate fine-grained samples
-    ```python
-    python ./gmm_extract_Fine_feature.py --dataset reRLDD
-  - This process generates quantified fatigue sequence features, which are stored in the `/fin_grained_feature` directory.
+4. **Fine-Grained Feature Extraction**:
+
+   - Input the confident samples, training set, and testing set into `gmm_extract_Fine_feature.py` to perform fine-grained classification.
+     - Update the paths: `path="your_confident_data_save_path"` and `save_path="your_fine_data_save_path"`.
+     - Run the following command to generate fine-grained samples:
+       ```python
+       python ./gmm_extract_Fine_feature.py --dataset reRLDD
+       ```
+   - This process generates quantified fatigue sequence features, which are stored in the `/fine_grained_feature` directory.
 ## Training & Testing
 To train and test the model, use the following commands:
 1. **Without Meta-Learning**:
