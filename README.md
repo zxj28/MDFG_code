@@ -12,7 +12,6 @@ The code has been tested with the following environment:
 Python: 3.7
 
 PyTorch: 1.13.1
-
 ### Install Python Packages
 
 To install the required Python packages, run the following command:
@@ -20,31 +19,41 @@ python -m pip install -r requirements.txt
 
 ## Dataset
 
-Our experiments utilize the reRLDD and reDROZY datasets.
-1.Training and Testing Split:
+Our experiments utilize the **reRLDD** and **reDROZY** datasets.
+### Dataset Setup
 
-  ·The first 8 participants are used as the training set.
+1. **Training and Testing Split**:
 
-  ·The remaining participants are used as the testing set.
-2.Feature Extraction:
+   - The first 8 participants are used as the training set.
+   - The remaining participants are used as the testing set.
 
-  ·The Eye Aspect Ratio (EAR) is input into the wavelet packet for feature extraction
+2. **Feature Extraction**:
 
-  ·The extracted features are stored in the /wavelet_feature directory.
-3.Confident Sample Selection:
+   - The Eye Aspect Ratio (EAR) is input into the wavelet packet for feature extraction
+   - The extracted features are stored in the `/wavelet_feature` directory.
 
-  ·Confident samples are identified using the small_loss method.
-  代码在/small_loss/small_loss_confident_ind.py
-  ·Both confident samples and remaining samples are stored in the /confident_analysis directory.
-4.Fine-Grained Feature Extraction:
+3. **Confident Sample Selection**:
 
-  ·The confidence samples, training set, and test set are fed into gmm_extract_Fine_feature.py to perform a fine-grained split.
-  ·This process generates quantified fatigue sequence features, which are stored in the /fin_grained_feature directory.
+   - Confident samples are identified using the `small_loss` method.
+     - Update the paths: `path="your_wavelet_faeture_path"` and `save_path="you_confint_data_save_path"`.
+     - Run the following command to extract confident samples:
+     - Both confident samples and remaining samples are stored in the `/confident_analysis` directory.
+     ```python
+     python ./small_loss/small_loss_cofident_ind.py --dataset reRLDD
+4.**Fine-Grained Feature Extraction**:
 
+  - Input the confident samples, training set, and testing set into `gmm_extract_Fine_feature.py` to perform fine-grained classification.
+    - Update the paths: `path="your_confint_data_save_path"` and `save_path="your_fine_data_save_path"`.
+    - Run the following command to generate fine-grained samples
+    ```python
+    python ./gmm_extract_Fine_feature.py --dataset reRLDD
+  - This process generates quantified fatigue sequence features, which are stored in the `/fin_grained_feature` directory.
 ## Training & Testing
-To train and test the model, run the following script:
-无元学习
-python MDFG_wometa.py
-有元学习
-python MDFG_meta.py
+To train and test the model, use the following commands:
+1. **Without Meta-Learning**:
+   ```python
+   python ./MDFG_wometa.py --dataset reRLDD
+2. **With Meta-Learning**:
+   ```python
+   python ./MDFG_meta.py --dataset reRLDD
 
