@@ -21,7 +21,7 @@ python -m pip install -r requirements.txt
 ## Dataset
 Our experiments utilize the **reRLDD** and **reDROZY** datasets.
 
-The statistical results of the dataset labels are provided in the  `./Label_statistics ` directory.
+The statistical results of the dataset labels are provided in the  `./Label_statistics` directory.
 ### Dataset Setup
 
 1. **Training and Testing Split**:
