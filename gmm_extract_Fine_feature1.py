@@ -121,47 +121,9 @@ def process_samples(samples, alphas, component_means, component_covariances, com
 
     return count, percentages, reshaped_result
 
-# Process remaining0
 count0, percentages0, retrain = process_samples(remaining0, alphas, combined_means, combined_covariances, combined_weights)
-greater_than_0_5_count0 = sum(v for k, v in count0.items() if k < 0.5)
-greater_than_or_equal_0_5_count0 = sum(v for k, v in count0.items() if k <= 0.5)
-between_0_and_1_count0 = sum(v for k, v in count0.items() if 0 < k < 1)
-count0_5 = sum(v for k, v in count0.items() if k == 0.5)
-
-greater_than_0_5_percentage0 = greater_than_0_5_count0 / len(remaining0)
-greater_than_or_equal_0_5_percentage0 = greater_than_or_equal_0_5_count0 / len(remaining0)
-between_0_and_1_percentage0 = between_0_and_1_count0 / len(remaining0)
-between0_5 = count0_5 / len(remaining0)
-
-# Process remaining1
 count1, percentages1, redattest = process_samples(remaining1, alphas, combined_means, combined_covariances, combined_weights)
-less_than_0_5_count1 = sum(v for k, v in count1.items() if k > 0.5)
-less_than_or_equal_0_5_count1 = sum(v for k, v in count1.items() if k >= 0.5)
-between_0_and_1_count1 = sum(v for k, v in count1.items() if 0 < k < 1)
-count1_5 = sum(v for k, v in count1.items() if k == 0.5)
-
-less_than_0_5_percentage1 = less_than_0_5_count1 / len(remaining1)
-less_than_or_equal_0_5_percentage1 = less_than_or_equal_0_5_count1 / len(remaining1)
-between_0_and_1_percentage1 = between_0_and_1_count1 / len(remaining1)
-between1_5 = count1_5 / len(remaining1)
-
 # Save results
 np.save(f'{save_path}/train.npy', retrain)
 np.save(f'{save_path}/test.npy', redattest)
 np.save(f'{save_path}/test.npy',)
-
-print("处理 remaining0 的结果:")
-print("计数:", count0)
-print("百分比:", percentages0)
-print("小于 0.5 的 alphas 百分比:", greater_than_0_5_percentage0)
-print("小于等于 0.5 的 alphas 百分比:", greater_than_or_equal_0_5_percentage0)
-print("等于 0.5 的 alphas 百分比:", between0_5)
-print("在 0 和 1 之间（不包括）的 alphas 百分比:", between_0_and_1_percentage0)
-
-print("\n处理 remaining1 的结果:")
-print("计数:", count1)
-print("百分比:", percentages1)
-print("大于 0.5 的 alphas 百分比:", less_than_0_5_percentage1)
-print("大于等于 0.5 的 alphas 百分比:", less_than_or_equal_0_5_percentage1)
-print("等于 0.5 的 alphas 百分比:", between1_5)
-print("在 0 和 1 之间（不包括）的 alphas 百分比:", between_0_and_1_percentage1)
