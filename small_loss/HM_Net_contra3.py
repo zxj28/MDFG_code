@@ -3,8 +3,6 @@ from torch.autograd import Variable, Function
 from torch.nn import Module, Parameter
 import torch.nn as nn
 import HM_LSTM
-print(123)
-# HM_Net(1.0, size_list, dict_size, embed_size)
 
 class HM_Net(Module):
     def __init__(self, a, size_list, dict_size, embed_size,seq_len):
@@ -16,7 +14,6 @@ class HM_Net(Module):
         self.embed_out1 = nn.Linear(size_list[0]*seq_len, dict_size)
         self.embed_out2 = nn.Linear(size_list[1]*seq_len, dict_size)
         self.embed_out3 = nn.Linear(size_list[2]*seq_len, dict_size)
-        # self.fc4 = nn.Linear(dict_size, 3)
         self.output_layer = nn.Linear(size_list[0] * seq_len + size_list[1] * seq_len + size_list[2] * seq_len, 2)
 
     def forward(self, inputs, hidden):
@@ -35,15 +32,7 @@ class HM_Net(Module):
         h_e3 = g_3.expand(g_3.size(0), self.dict_size) * self.embed_out3(
             h_3.view(h_3.size(0) ,  h_3.size(1)*h_3.size(2)))
  
-        # h_e = self.relu(h_e1 + h_e2 + h_e3)  # batch_size*time_steps, hidden_size
         output = self.output_layer(h.view(h.size(0), h.size(1) * h.size(2)))
-
-        # output = self.fc4(h.view(h.size(0),  h.size(1) * h.size(2)))
-        # output = output.cuda()
-
-        # print("h.view(h.size(0),  h.size(1) * h.size(2)),output, hidden, z_1, z_2, z_3",h.view(h.size(0),  h.size(1) * h.size(2)),output, hidden, z_1, z_2, z_3)
-        # return h.view(h.size(0),  h.size(1) * h.size(2)),output, hidden, z_1, z_2, z_3
-        # return h.view(h.size(0),  h.size(1) * h.size(2))
         return output
     
     def init_hidden(self, batch_size):
