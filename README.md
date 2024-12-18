@@ -63,3 +63,8 @@ To train and test the model, use the following commands:
    ```python
    python ./MDFG_meta.py --dataset reRLDD
 Important: Before running these commands, make sure to modify the paths for the fine-grained data and the corresponding label path. You can either update the paths to point to your own dataset or use the provided dataset paths directly.
+## About
+If our project is helpful to you, we hope you can star and fork it. If there are any questions and suggestions, please feel free to contact us.
+
+Thanks for your support.
+
