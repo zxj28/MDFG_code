@@ -47,7 +47,7 @@ The statistical results of the dataset labels are provided in the  `./Label_stat
 4. **Fine-Grained Feature Extraction**:
 
    - Input the confident samples, training set, and testing set into `gmm_extract_Fine_feature.py` to perform fine-grained classification.
-     - Update the paths: `path="your_confident_data_save_path"` and `save_path="your_fine_data_save_path"`.
+     - Update the paths: `path="your_confident_data_save_path"` and `save_path="your_fine_grained_data_save_path"`.
      - Run the following command to generate fine-grained samples:
        ```python
        python ./gmm_extract_Fine_feature.py --dataset reRLDD
@@ -62,4 +62,4 @@ To train and test the model, use the following commands:
 2. **With Meta-Learning**:
    ```python
    python ./MDFG_meta.py --dataset reRLDD
-
+Important: Before running these commands, make sure to modify the paths for the fine-grained data and the corresponding label path. You can either update the paths to point to your own dataset or use the provided dataset paths directly.
