@@ -126,4 +126,3 @@ count1, percentages1, redattest = process_samples(remaining1, alphas, combined_m
 # Save results
 np.save(f'{save_path}/train.npy', retrain)
 np.save(f'{save_path}/test.npy', redattest)
-np.save(f'{save_path}/test.npy',)
