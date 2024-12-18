@@ -12,8 +12,8 @@ parser.add_argument("--seed", type=int, default=42, help="Random seed")
 args = parser.parse_args()
 np.random.seed(args.seed)
 
-path = "./confident_analysis_zhushi"
-save_path = f"./fine_grained_feature_zhushi/{args.dataset}"
+path = "./confident_analysis"
+save_path = f"./fine_grained_feature_zhushi1/{args.dataset}"
 
 if not os.path.exists(save_path): 
     os.makedirs(save_path) 
