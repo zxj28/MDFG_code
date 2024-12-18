@@ -19,7 +19,7 @@ To install the required Python packages, run the following command:
 python -m pip install -r requirements.txt
  ```
 ## Dataset
-
+The statistical results of the dataset labels are provided in the ./Label_statistics directory.
 Our experiments utilize the **reRLDD** and **reDROZY** datasets.
 ### Dataset Setup
 
@@ -41,7 +41,7 @@ Our experiments utilize the **reRLDD** and **reDROZY** datasets.
        ```python
        python ./small_loss/small_loss_confident_ind.py --dataset reRLDD
        ```
-   - Both confident samples and remaining samples are stored in the `./confident_analysis` directory.
+   - Both the confident samples and remaining samples, along with the normalized dataset, are saved in the ./confident_analysis directory.
      
 4. **Fine-Grained Feature Extraction**:
 
