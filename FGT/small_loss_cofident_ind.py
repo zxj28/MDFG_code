@@ -12,6 +12,7 @@ import HM_Net_contra3 as HM_Net
 import os
 warnings.filterwarnings("ignore")
 
+# Function to set a fixed seed for reproducibility
 def set_seed(seed):
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -20,6 +21,7 @@ def set_seed(seed):
         torch.cuda.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
 
+# Custom Dataset class for loading data
 class MyDataSet(Dataset):
     def __init__(self, x_train, x_label):
         self.x_train = x_train
@@ -31,10 +33,12 @@ class MyDataSet(Dataset):
     def __getitem__(self, idx):
         return self.x_train[idx], self.x_label[idx]
 
+# Function to shuffle the dataset while keeping the same order for features and labels
 def unison_shuffled_copies(a, b):
     p = np.random.permutation(len(a))
     return a[p], b[p]
 
+# Function to normalize data (mean and standard deviation normalization)
 def normalize_data(train_x, test_x):
     for j in range(train_x.shape[2]):
         mean = np.mean(train_x[:, :, j])
@@ -43,10 +47,12 @@ def normalize_data(train_x, test_x):
         train_x[:, :, j] = (train_x[:, :, j] - mean) / std
     return train_x, test_x
 
+# Function to compute the cross-entropy loss
 def compute_loss(output, targets, reduction='mean'):
     criterion = nn.CrossEntropyLoss(reduction=reduction)
     return criterion(output, targets)
 
+# Main function to train and evaluate the model
 def train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=100, conf_ratio=0.5, clip=1):
     best_test_accuracy = 0
     best_f1 = 0
@@ -55,6 +61,7 @@ def train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=1
     train_loss_list = []
     test_accuracy_list = []
 
+    # Training loop
     for epoch in range(num_epochs):
         model.train()
         correct = 0
@@ -79,6 +86,7 @@ def train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=1
         train_accuracy_list.append(train_accuracy)
         train_loss_list.append(average_loss)
 
+        # Confidence analysis for the first epoch
         if epoch == 0:
             model.eval()
             with torch.no_grad(): 
@@ -91,26 +99,19 @@ def train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=1
                     hidden = model.init_hidden(len(inputs))
                     output  = model(inputs, hidden)
                     targets = targets.long()
-            
-
                     loss = compute_loss(output, targets, reduction='none')  
                     all_losses.extend(loss.tolist())  
                     all_labels.extend(targets.cpu().numpy().tolist())
                     all_inputs.extend(inputs.cpu().numpy())
 
-            
+            # Confidence thresholding for clean data extraction
             labels = [-1] * len(all_inputs)
-
             ratio = conf_ratio
             all_losses = np.array(all_losses)  
             all_labels = np.array(all_labels)
             all_inputs = np.array(all_inputs)
 
-            print("all_labels", all_labels.shape)
-            print("all_losses", all_losses.shape)
-            print("all_inputs", all_inputs.shape)
-
-
+            # Splitting clean data based on the loss value
             mask_0 = (all_labels == 0)
             loss0 = all_losses[mask_0]
             clean0 = all_inputs[mask_0]
@@ -122,6 +123,7 @@ def train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=1
             IH0 = label0[len_ind_0]
             original_positions_clean0 = np.where(mask_0)[0][ind_0_sorted[:len_id_0]]
           
+            # Updating labels for clean data
             for pos in original_positions_clean0:
                 labels[pos] = 0
             mask_1 = (all_labels == 1)
@@ -134,27 +136,21 @@ def train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=1
             label1 = all_labels[mask_1]
             IH1 = label1[len_ind_1]
         
-            print(np.where(mask_1)[0])
             original_positions_clean1 = np.where(mask_1)[0][ind_1_sorted[:len_id_1]]
 
+            # Updating labels for clean data
             for pos in original_positions_clean1:
                 labels[pos] = 1
             remaining0 = np.delete(all_inputs[mask_0], len_ind_0, axis=0)
             remaining1 = np.delete(all_inputs[mask_1], len_ind_1, axis=0)
             
-            print("clean0 shape:", clean0.shape)
-            print("clean1 shape:", clean1.shape)
-            print("remaining0 shape:", remaining0.shape)
-            print("remaining1 shape:", remaining1.shape)
-            np.save(save_path + "/clean0.npy", clean0)
-            np.save(save_path + "/clean1.npy", clean1)
-            np.save(save_path + "/remaining0.npy", remaining0)
-            np.save(save_path + "/remaining1.npy", remaining1)
-            print("clean0 saved")
-            print("clean1 saved")
-            print("remaining0 saved")
-            print("remaining1 saved")
+            # Saving the clean and remaining data for analysis
+            np.save(save_path + "/clean0_data.npy", clean0)
+            np.save(save_path + "/clean1_data.npy", clean1)
+            np.save(save_path + "/remaining0_data.npy", remaining0)
+            np.save(save_path + "/remaining1_data.npy", remaining1)
                 
+        # Evaluation after each epoch
         model.eval()
         correct = 0
         all_true_labels = []
@@ -163,32 +159,37 @@ def train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=1
             for i, batch in enumerate(test_loader):
                 test_inputs, test_targets = batch[0].cuda(), batch[1].cuda().view(-1).long()
                 hidden = model.init_hidden(len(test_inputs))
-                output= model(test_inputs, hidden)
+                output = model(test_inputs, hidden)
                 test_targets = test_targets.cpu().numpy()
                 predicted = output.argmax(dim=1)
                 all_true_labels.extend(test_targets)
                 all_predicted_labels.extend(predicted.cpu().numpy())
                 correct += np.sum(predicted.cpu().numpy() == test_targets)
 
+        # Calculate performance metrics
         conf_matrix = confusion_matrix(all_true_labels, all_predicted_labels)
         accuracy = accuracy_score(all_true_labels, all_predicted_labels)
         f1 = f1_score(all_true_labels, all_predicted_labels, average='weighted')
         test_accuracy_list.append(accuracy)
 
+        # Keep track of the best model based on test accuracy and F1 score
         if accuracy > best_test_accuracy:
             EPOCH = epoch
             best_test_accuracy = accuracy
             best_f1 = f1
 
+        # Print progress every 5 epochs
         if epoch % 5 == 0:
             print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {average_loss:.4f}, Train Accuracy: {train_accuracy:.4f}')
             print(f'Test Accuracy: {accuracy:.4f}')
             print(f'F1 Score: {f1:.4f}')
 
+    # Print best test accuracy and F1 score
     print(f'EPOCH: {EPOCH}')
     print(f'Best Test Accuracy: {best_test_accuracy:.4f}')
     print(f'Best F1 Score: {best_f1:.4f}')
 
+    # Plot and save training statistics
     plt.figure(figsize=(12, 4))
 
     plt.subplot(1, 3, 1)
@@ -216,11 +217,13 @@ def train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=1
     plt.savefig(f"{save_path}/param.jpg")
     plt.close()
 
+# Function to modify labels (used for class merging or changes)
 def modify_labels(y_train, y_test):
     y_train[y_train == 2] = 1
     y_test[y_test == 2] = 1
     return y_train, y_test
 
+# Main execution block
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Load and process dataset") 
     parser.add_argument("--dataset", type=str,required=True, help="Dataset to use (reRLDD or reDROZY)") 
@@ -228,7 +231,11 @@ if __name__ == "__main__":
     parser.add_argument("--ratio", type=float, default=0.5, help="Confidence threshold")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
     args = parser.parse_args()
+    
+    # Set the random seed for reproducibility
     set_seed(args.seed)
+
+    # File paths and dataset loading
     path = "./wavelet_feature"
     save_path = f"./confident_analysis1/{args.dataset}"
     if not os.path.exists(save_path): 
@@ -236,11 +243,17 @@ if __name__ == "__main__":
         print(f"Save path '{save_path}' created.") 
     else: 
         print(f"Save path '{save_path}' already exists.")
+    
+    # Loading dataset files
     x_train = np.load(f"{path}/{args.dataset}/train_data.npy")
     x_test = np.load(f"{path}/{args.dataset}/test_data.npy")
     y_train = np.load(f"{path}/{args.dataset}/train_label.npy")
     y_test = np.load(f"{path}/{args.dataset}/test_label.npy")    
+    
+    # Modify labels (if needed)
     y_train, y_test = modify_labels(y_train, y_test)
+
+    # Reshaping data for model compatibility
     batch_size = 32
     x_train_re = x_train.reshape(-1, 8)
     y_train_re = np.repeat(y_train, 59, axis=0)
@@ -250,18 +263,27 @@ if __name__ == "__main__":
     x_test = x_test_re.reshape(-1,1,8)
     y_train = y_train_re
     y_test = y_test_re
+
+    # Check class distribution in the dataset
     unique, counts = np.unique(y_train, return_counts=True)
     class_counts = dict(zip(unique, counts))
     print("Class counts in y_train:", class_counts)
     unique, counts = np.unique(y_test, return_counts=True)
     class_counts = dict(zip(unique, counts))    
     print("Class counts in y_test:", class_counts)    
+
+    # Normalize data
     x_train, x_test = normalize_data(x_train, x_test)
     np.save(save_path +"/normalize_train.npy", x_train.reshape(-1, 8))
     np.save(save_path + "/normalize_test.npy", x_test.reshape(-1, 8))
+    # Shuffle training data
     x_train, y_train = unison_shuffled_copies(x_train, y_train)
+    
+    # Prepare DataLoader for training and testing
     train_loader = DataLoader(MyDataSet(x_train, y_train), batch_size=batch_size, shuffle=False, drop_last=False)
     test_loader = DataLoader(MyDataSet(x_test, y_test), batch_size=batch_size, shuffle=False, drop_last=False)
+
+    # Initialize model and optimizer
     num_epochs = args.epoch
     dict_size = 2
     size_list = [32, 32, 32]
@@ -269,7 +291,11 @@ if __name__ == "__main__":
     seq_len = x_train.shape[1]
     model = HM_Net.HM_Net(1.0, size_list, dict_size, embed_size, seq_len)
     model = model.cuda()
+
+    # Optimizer setup
     learning_rate = 0.001
     weight_decay = 1e-4  
     optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
-    train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=num_epochs,conf_ratio=args.ratio)
+    
+    # Train and evaluate the model
+    train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=num_epochs, conf_ratio=args.ratio)
