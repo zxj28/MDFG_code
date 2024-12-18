@@ -188,7 +188,7 @@ if __name__ == "__main__":
     parser.add_argument("--epoch", type=int, default=200, help="Number of training epochs")
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
     args = parser.parse_args()
-    set_seed(args.seed) # 假设你有一个设置种子的函数
+    set_seed(args.seed) 
     path='./fine_grained_feature'
     x_train = np.load(f"{path}/{args.dataset}/train.npy")
     x_test = np.load(f"{path}/{args.dataset}/test.npy")
@@ -202,7 +202,6 @@ if __name__ == "__main__":
     x_train, x_test = normalize_data(x_train, x_test)
     x_train = x_train.reshape(-1,59)
     x_test = x_test.reshape(-1,59)
-    # 在单独设置特定参数组合时使用保存的种子状态
     print("x_train.shape", x_train.shape)
     print("y_train.shape", y_train.shape)
     print("x_test.shape", x_test.shape)
@@ -215,7 +214,7 @@ if __name__ == "__main__":
     criterion = nn.CrossEntropyLoss()
     model = DNN_Net(input_size, output_size).cuda()
     learning_rate = 0.001
-    weight_decay = 1e-3  # 设置weight_decay的值
+    weight_decay = 1e-3  
     optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
     criterion = nn.CrossEntropyLoss()
     meta_criterion = nn.BCELoss()
