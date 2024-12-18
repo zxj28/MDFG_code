@@ -15,17 +15,12 @@ class HM_LSTM(Module): #Istedet for at lave egen LSTM så brug den fra main.py
         size_list[1]:      hidden size of layer 2
         size_list[2]:      hidden size of layer 3
         """
-
-        # def __init__(self, bottom_size, hidden_size, top_size, a, last_layer):
-
-        #Init cell state
         self.cell_1 = HM_LSTMCell(self.input_size, self.size_list[0], self.size_list[1], self.a, False) #bottom_size, hidden_size, top_size, a, last_layer
         self.cell_2 = HM_LSTMCell(self.size_list[0], self.size_list[1], self.size_list[2], self.a, False)
         self.cell_3 = HM_LSTMCell(self.size_list[1], self.size_list[2], None, self.a, True)
 
     def forward(self, inputs, hidden): #hidden state supplied, if the model is going to freestyle or make predictions that dont start from 0
-        # inputs.size = (batch_size, time steps, embed_size/input_size)
-
+        
         time_steps = inputs.size(1)
         batch_size = inputs.size(0)
 
@@ -56,10 +51,7 @@ class HM_LSTM(Module): #Istedet for at lave egen LSTM så brug den fra main.py
         z_2:      boundary state of layer 2 --||--
         z_3:      boundary state of layer 3 --||--
         """
-
         h_1, h_2, h_3, z_1, z_2, z_3 = [], [], [], [], [], []
-
-        # def forward(self, c, h_bottomup, h_recur, h_topdown, z, z_bottom):
 
         for t in range(time_steps):
             h_t1, c_t1, z_t1 = self.cell_1(c=c_t1, h_bottomup=inputs[:,t, :].t(), h_recur=h_t1, h_topdown=h_t2, z=z_t1, z_bottom=z_one) #t1 og t2 is layer1 and layer2 and not time1 and time2
