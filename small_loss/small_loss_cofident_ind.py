@@ -100,7 +100,6 @@ def train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=1
 
             
             labels = [-1] * len(all_inputs)
-
             ratio = conf_ratio
             all_losses = np.array(all_losses)  
             all_labels = np.array(all_labels)
@@ -109,7 +108,6 @@ def train_and_evaluate(model, train_loader, test_loader, optimizer, num_epochs=1
             print("all_labels", all_labels.shape)
             print("all_losses", all_losses.shape)
             print("all_inputs", all_inputs.shape)
-
 
             mask_0 = (all_labels == 0)
             loss0 = all_losses[mask_0]
