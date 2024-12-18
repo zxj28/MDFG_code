@@ -40,7 +40,7 @@ The statistical results of the dataset labels are provided in the  `./Label_stat
      - Update the paths: `path="your_wavelet_feature_path"` and `save_path="your_confident_data_save_path"`.
      - Run the following command to extract confident samples:
        ```python
-       python ./small_loss/small_loss_confident_ind.py --dataset reRLDD
+       python ./FGT/small_loss_confident_ind.py --dataset reRLDD
        ```
    - Both the confident samples and remaining samples, along with the normalized dataset, are saved in the ./confident_analysis directory.
      
