@@ -282,7 +282,7 @@ if __name__ == "__main__":
         nn.Linear(32, 2)
     )
     learning_rate = 0.001
-    weight_decay = 1e-3  # 设置weight_decay的值
+    weight_decay = 1e-3 
     optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
     criterion = nn.CrossEntropyLoss()
     minority_class, majority_class = get_minority_majority_classes(y_train)
