@@ -7,7 +7,7 @@ def hard_sigm(a, x):
     temp = torch.div(torch.add(torch.mul(x, a), 1), 2.0)
     output = torch.clamp(temp, min=0, max=1)
     return output
-
+    
 class Bound(Function):
     @staticmethod
     def forward(ctx, x):
@@ -27,7 +27,6 @@ class Bound(Function):
 
         return x_grad
 
-# 使用方法
 bound = Bound.apply
 
 class HM_LSTMCell(Module):
@@ -39,7 +38,6 @@ class HM_LSTMCell(Module):
         self.top_size = top_size
         self.a = a #se slope annealing trick i training
         self.last_layer = last_layer
-
 
         #Initialize weight matrices for transition of hidden states between HM_LSTM cells
         '''
