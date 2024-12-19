@@ -42,7 +42,7 @@ The statistical results of the dataset labels are provided in the  `./Label_stat
        ```python
        python ./FGT/small_loss_confident_ind.py --dataset reRLDD
        ```
-   - Both the confident samples and remaining samples, along with the normalized dataset, are saved in the ./confident_analysis directory.
+   - Both the confident samples and remaining samples, along with the normalized dataset, are saved in the `./confident_analysis` directory.
      
 4. **Fine-Grained Feature Extraction**:
 
